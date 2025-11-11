@@ -1,5 +1,5 @@
 {
-  "name": "tini-log",
+  "name": "dd-tinylog",
   "version": "0.1.0-beta",
   "description": "A minimal, fast logging library for Node.js.",
   "main": "./dist/index.js",

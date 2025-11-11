@@ -19,13 +19,13 @@ A minimal, fast, and feature-rich logging library for Node.js.
 ## Installation
 
 ```bash
-npm install tini-log
+npm install dd-tinylog
 ```
 
 ## Usage
 
 ```typescript
-import { Logger } from 'tini-log';
+import { Logger } from 'dd-tinylog';
 
 // Create a logger instance
 const logger = new Logger({

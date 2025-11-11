@@ -15,7 +15,7 @@ npm install tini-log
 To start logging, you need to create an instance of the `Logger` class.
 
 ```typescript
-import { Logger } from 'tini-log';
+import { Logger } from 'dd-tinylog';
 
 // Create a logger with default options
 const logger = new Logger();
@@ -26,14 +26,14 @@ logger.warn('This is a warning.');
 logger.error('This is an error.');
 ```
 
-By default, `tini-log` will log messages with a level of `info` or higher to the console.
+By default, `dd-tinylog` will log messages with a level of `info` or higher to the console.
 
 ## Configuration
 
 You can customize the logger by passing a configuration object to the constructor.
 
 ```typescript
-import { Logger } from 'tini-log';
+import { Logger } from 'dd-tinylog';
 
 const logger = new Logger({
   level: 'debug', // Log all messages from debug level and above
