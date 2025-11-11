@@ -24,6 +24,8 @@ const logger = new Logger();
 logger.info('Hello, world!');
 logger.warn('This is a warning.');
 logger.error('This is an error.');
+logger.silent('This message will not be logged');
+logger.boring('This message will be logged but not colored');
 ```
 
 By default, `dd-tinylog` will log messages with a level of `info` or higher to the console.

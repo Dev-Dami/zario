@@ -1,11 +1,11 @@
 # tini-log
 
-[![npm version](https://badge.fury.io/js/teeny-logger.svg)](https://badge.fury.io/js/teeny-logger)
+[![npm version](https://badge.fury.io/js/teeny-logger.svg)](https://badge.fury.io/js/dd-tinylog)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A minimal, fast, and feature-rich logging library for Node.js.
 
-`tini-log` is designed to be a lightweight and easy-to-use logger with support for multiple transports, customizable formatting, and dynamic log levels.
+`tini-log` is designed to be a dead simple lightweight and easy-to-use logger with support for multiple transports, customizable formatting, and dynamic log levels.
 
 ## Features
 
@@ -36,24 +36,16 @@ const logger = new Logger({
     { type: 'file', options: { path: './logs/app.log' } },
   ],
 });
+```
 
+```typescript
 // Log messages
 logger.info('Server started on port 3000');
 logger.warn('Low disk space');
 logger.error('Failed to connect to database', { code: 500 });
 logger.debug('This is a debug message');
-```
-
-## Documentation
-
-- [Getting Started](./docs/getting-started.md)
-- [API Reference](./docs/api-reference.md)
-- [Transports](./docs/transports.md)
-- [Examples](./docs/examples.md)
-
-## Contributing
-
-Contributions are welcome! Please see the [Contributing Guidelines](./CONTRIBUTING.md) for more information.
+logger.silent('This message will not be logged');
+logger.boring('This message will be logged but not colored');
 
 ## License
 

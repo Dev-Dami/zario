@@ -50,6 +50,12 @@ Logs a message with the `error` level.
 
 #### `setLevel(level: LogLevel)`
 
+Logs a message with the `silent` level.
+
+#### `setLevel(level: LogLevel)`
+
+Logs a message with the `boring` level.
+
 Changes the minimum log level at runtime.
 
 ```typescript
@@ -82,3 +88,5 @@ The `LogLevel` type defines the different levels of logging available in `dd-tin
 - `'info'`
 - `'warn'`
 - `'error'`
+- `'silent'`
+- `'boring'`
