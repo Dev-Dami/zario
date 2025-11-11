@@ -52,4 +52,25 @@ logger.boring('This message will be logged but not colored');
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](./LICENSE] file for details.
+
+## Uses for this Library
+
+`dd-tinylog` is a flexible logging tool for many kinds of Node.js applications:
+
+* **Web Servers & APIs** – Record requests, errors, and performance data.
+* **Command-Line Tools (CLI)** – Display progress, warnings, and errors clearly for users.
+* **Background Jobs** – Track scheduled or long-running tasks.
+* **Microservices** – Collect logs from multiple services for easier debugging.
+* **Development & Testing** – Adjust log levels to show more or less detail while building or testing.
+
+---
+
+## Planned Improvements
+
+We’re working on several new features and enhancements for `dd-tinylog`:
+
+* **Child Loggers** – Create sub-loggers that inherit settings from the main logger but can add their own tags (e.g., a user ID). This helps organize and filter logs by component.
+* **Asynchronous Transports** – Write logs in the background to prevent blocking the main application, improving performance under heavy logging.
+* **Custom Log Levels** – Define your own log levels beyond the built-in ones like `info` or `error`.
+* **Performance Optimizations** – Further reduce overhead and improve log throughput.
