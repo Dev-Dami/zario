@@ -23,7 +23,7 @@ We welcome contributions from the community! Please follow these guidelines to e
     npm run build
     ```
 
-5.  Run the tests (when available):
+5.  Run the tests (when available not available yet):
 
     ```bash
     npm test
@@ -54,7 +54,7 @@ teeny-logger/
 │   │
 │   └── index.ts                   # Entry point that exports Logger and setup
 │
-├── tests/
+├── tests(Not Avialable)/
 │   ├── src/core/Logger.test.ts             # Unit tests for the core logger
 │   ├── ConsoleTransport.test.ts   # Tests for console logging
 │   └── FileTransport.test.ts      # Tests for file logging
