@@ -26,5 +26,3 @@ npm test -- FileTransport
 # Run specific test suite
 npm test -- --testNamePattern="Constructor"
 ```
-
-## Test Structure
