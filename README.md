@@ -46,7 +46,7 @@
 ## 📦 Installation
 
 ```bash
-npm install tini-log
+npm install dd-tinylog
 ```
 
 <details>
@@ -64,7 +64,7 @@ bun add dd-tinylog
 ### 🚀 Quick Start
 
 ```js
-import Logger from "tini-log";
+import Logger from "dd-tinylog";
 
 const logger = new Logger({
   level: "info",
@@ -497,7 +497,7 @@ server.js
 
 ### Example logger.js:
 ```js
-import Logger from "tini-log";
+import Logger from "dd-tinylog";
 
 export const logger = new Logger({
   prefix: "[API]",
@@ -508,7 +508,7 @@ export const logger = new Logger({
 ## 💼 Express.js Example
 ```js
 import express from "express";
-import Logger from "tini-log";
+import Logger from "dd-tinylog";
 
 const app = express();
 const logger = new Logger({ prefix: "[API]" });
@@ -530,7 +530,7 @@ app.listen(3000, () => {
 
 ## 🧪 Testing Example
 ```js
-import Logger from "tini-log";
+import Logger from "dd-tinylog";
 
 describe("Logger", () => {
   it("should log messages", () => {
@@ -682,10 +682,10 @@ Follow these steps if you want to work on the project locally:
 
 ```bash
 # Clone the repository
-git clone https://github.com/Dev-Dami/tini-log.git
+git clone https://github.com/Dev-Dami/dd-tinylog.git
 
 # Navigate into the project
-cd tini-log
+cd dd-tinylog
 
 # Install dependencies
 npm install
@@ -720,7 +720,7 @@ MIT License - feel free to use this in your projects!
 ```
 
 ## 💬 Final Thoughts
-<B>tini-log</B> focuses on clarity, simplicity, and developer-friendliness.
+<B>dd-tinylog</B> focuses on clarity, simplicity, and developer-friendliness.
 It gives you the power of bigger loggers like Winston or Pino while keeping the API tiny and elegant.
 
 If you're building small services, APIs, CLIs, or educational projects, this logger will feel right at home.
