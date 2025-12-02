@@ -64,9 +64,51 @@
 
 ## 📦 Installation
 
+[📖 Documentation](#-documentation) · [⚡ Quick Start](#-quick-start) · [✨ Features](#-features) · [💬 Community](#-community)
+
+<br/>
+
+![separator](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+
+</div>
+
+<br/>
+
+## ✨ Highlights
+
+⚡ Super lightweight — minimal footprint, fast execution
+
+🎯 Simple API — intuitive methods like info(), warn(), etc.
+
+🎨 Custom formatting — plain text or JSON
+
+⏱️ Automatic timestamps
+
+📁 Multiple transports
+
+🧩 Child loggers for modular logging
+
+🧵 Async writes — keeps Node responsive
+
+🔒 Small, safe, dependency-light design
+
+## 📦 Installation
+
 ```bash
-npm install dd-tinylog
+npm install tini-log
 ```
+
+<details>
+<summary>📋 Other Package Managers</summary>
+```bash
+# Using Yarn
+yarn add dd-tinylog
+# Using pnpm
+pnpm add dd-tinylog
+# Using bun
+bun add dd-tinylog
+```
+</details>
 
 <details>
 <summary>📋 Other Package Managers</summary>
@@ -428,6 +470,25 @@ const logger = new Logger({
   colorize: true,
   prefix: '[CLI]'
 });
+```
+## 🧩 Log Formats
+
+### Plain Text (default)
+```pgsql
+[2025-01-23 10:22:20] [INFO] User logged in
+```
+### JSON Format
+```js
+const logger = new Logger({ format: "json" });
+```
+Output:
+```json
+{
+  "timestamp": "2025-01-23T10:22:20Z",
+  "level": "info",
+  "message": "User logged in"
+}
+```
 
 async function buildProject() {
   logger.info('Starting build process...');
@@ -458,6 +519,7 @@ import { Logger } from 'dd-tinylog';
 const userService = new Logger({
   prefix: '[UserService]'
 });
+```
 
 const paymentService = new Logger({
   prefix: '[PaymentService]'
@@ -466,12 +528,203 @@ const paymentService = new Logger({
 const orderService = new Logger({
   prefix: '[OrderService]'
 });
+```
+
+## 📚 Full Options Reference
+
+| Option         | Type     | Description             |               |
+| -------------- | -------- | ----------------------- | ------------- |
+| **level**      | string   | Log level threshold     |               |
+| **format**     | `"plain" | "json"`                 | Output format |
+| **timestamp**  | boolean  | Include timestamps      |               |
+| **prefix**     | string   | Prepended label         |               |
+| **transports** | array    | Where logs are written  |               |
+| **child()**    | method   | Creates a scoped logger |               |
+
+![separator](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+
+## 📖 Documentation
+
+<div align="center">
+
+<table>
+<thead>
+<tr>
+<th width="30%">📚 Resource</th>
+<th width="50%">📝 Description</th>
+<th width="20%">🔗 Link</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>📘 Usage Guide</strong></td>
+<td>Complete guide with examples and best practices</td>
+<td><a href="./docs/usage.md">Read →</a></td>
+</tr>
+<tr>
+<td><strong>⚙️ Configuration</strong></td>
+<td>All configuration options explained in detail</td>
+<td><a href="./docs/configuration.md">Read →</a></td>
+</tr>
+<tr>
+<td><strong>🎯 API Reference</strong></td>
+<td>Full API documentation with type definitions</td>
+<td><a href="./docs/api.md">Read →</a></td>
+</tr>
+<tr>
+<td><strong>💼 Use Cases</strong></td>
+<td>Real-world examples and implementation patterns</td>
+<td><a href="./docs/use-cases.md">Read →</a></td>
+</tr>
+<tr>
+<td><strong>🚀 Migration Guide</strong></td>
+<td>Migrate from other logging libraries</td>
+<td><a href="./docs/migration.md">Read →</a></td>
+</tr>
+<tr>
+<td><strong>🔌 Custom Transports</strong></td>
+<td>Build your own transport implementations</td>
+<td><a href="./docs/transports.md">Read →</a></td>
+</tr>
+</tbody>
+</table>
+
+</div>
+
+![separator](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+
+## 🗺️ Roadmap
+
+<table>
+<tr>
+<td width="33%">
+
+### 🎯 Coming Soon
+
+- [x] ✅ Console & File transports
+- [x] ✅ Child loggers
+- [x] ✅ TypeScript support
+- [ ] 🔄 Log rotation
+- [ ] 🔄 HTTP transport
+- [ ] 🔄 Syslog support
+
+</td>
+<td width="33%">
+
+### 🚀 Future Plans
+
+- [ ] 📊 Performance metrics
+- [ ] 🔍 Advanced filtering
+- [ ] 📱 React Native support
+- [ ] 🌈 Custom themes
+- [ ] 🔐 Log encryption
+- [ ] 📈 Analytics dashboard
+
+</td>
+<td width="33%">
+
+### 💡 Under Consideration
+
+- [ ] WebSocket transport
+- [ ] MongoDB transport
+- [ ] Redis transport
+- [ ] Elasticsearch integration
+- [ ] Structured logging
+- [ ] Log aggregation
+
+</td>
+</tr>
+</table>
+
+> 🗳️ **Vote for features:** Have a feature request? [Open an issue](../../issues/new) and let us know!
+
+## 🤝 Contributing
+
+We ❤️ contributions! Whether it's bug reports, feature requests, or code contributions.
+
+<table>
+<tr>
+<td width="25%" align="center">
+<strong>🐛 Report Bugs</strong><br/>
+<sub>Found a bug?</sub><br/>
+<a href="../../issues/new">Report it →</a>
+</td>
+<td width="25%" align="center">
+<strong>💡 Request Features</strong><br/>
+<sub>Have an idea?</sub><br/>
+<a href="../../issues/new">Suggest it →</a>
+</td>
+<td width="25%" align="center">
+<strong>📖 Improve Docs</strong><br/>
+<sub>Fix a typo?</sub><br/>
+<a href="../../pulls">Submit PR →</a>
+</td>
+<td width="25%" align="center">
+<strong>💬 Join Discussion</strong><br/>
+<sub>Questions?</sub><br/>
+<a href="../../discussions">Discuss →</a>
+</td>
+</tr>
+</table>
+
+## 🛠️ Development Setup
+Follow these steps if you want to work on the project locally:
+
+```bash
+# Clone the repository
+git clone https://github.com/Dev-Dami/tini-log.git
+
+# Navigate into the project
+cd tini-log
+
+# Install dependencies
+npm install
+
+# Run tests (if available)
+npm test
+
+# Build the project
+npm run build
+```
+
+## 💬 Community
+<div align="center">
+
+[![GitHub Stars](https://img.shields.io/github/stars/yourusername/dd-tinylog?style=social)](../../stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/yourusername/dd-tinylog?style=social)](../../network/members)
+[![GitHub Issues](https://img.shields.io/github/issues/yourusername/dd-tinylog?style=social)](../../issues)
+
+**Join our growing community!**
+
+[💬 Discussions](../../discussions) • [🐛 Issues](../../issues) • [📢 Changelog](./CHANGELOG.md)
+
+</div>
+
+![separator](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
+
+## 📄 License
+This project is licensed under the **MIT License** - see the [LICENSE](./LICENSE) file for full details.
 
 // Use in distributed system
 userService.info('User created', { id: 123 });
 paymentService.info('Payment processed');
 orderService.info('Order placed');
 ```
+MIT License - feel free to use this in your projects!
+```
+
+## 💬 Final Thoughts
+<B>tini-log</B> focuses on clarity, simplicity, and developer-friendliness.
+It gives you the power of bigger loggers like Winston or Pino while keeping the API tiny and elegant.
+
+If you're building small services, APIs, CLIs, or educational projects, this logger will feel right at home.
+
+## 🌟 Show Your Support
+
+If **dd-tinylog** focuses on clarity, simplicity, and developer-friendliness.
+It gives you the power of bigger loggers like Winston or Pino while keeping the API tiny and elegant.
+
+If you're building small services, APIs, CLIs, or educational projects, this logger will feel right at home, consider:
 
 **Perfect for:**
 - Distributed systems
@@ -690,7 +943,9 @@ If **dd-tinylog** made your logging easier, consider:
 
 <br/>
 
+</div>
 ---
+<div align="center">
 
 <div align="center">
 
