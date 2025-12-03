@@ -6,9 +6,8 @@ We welcome contributions from the community! Please follow these guidelines to e
 
 1.  Fork the repository on GitHub.
 2.  Clone your fork locally:
-
     ```bash
-    git clone https://github.com/Dev-Dami/teeny-logger.git
+    git clone https://github.com/Dev-Dami/tini-log.git
     ```
 
 3.  Install the dependencies:
@@ -23,7 +22,7 @@ We welcome contributions from the community! Please follow these guidelines to e
     npm run build
     ```
 
-5.  Run the tests (when available not available yet):
+5.  Run the tests:
 
     ```bash
     npm test
@@ -33,16 +32,17 @@ We welcome contributions from the community! Please follow these guidelines to e
 
 ```
 teeny-logger/
-│
+│           
+├── docs                           # Documentation (library)
 ├── src/
 │   ├── core/
 │   │   ├── Logger.ts              # Main logger class
-│   │   ├── LogLevel.ts            # Enum or constants for log levels
+│   │   ├── LogLevel.ts            # constants for log levels
 │   │   ├── Formatter.ts           # Handles timestamp & message formatting
 │   │   └── Transport.ts           # Base interface for log output targets
 │   │
 │   ├── transports/
-│   │   ├── ConsoleTransport.ts    # Handles console output (colorized or not)
+│   │   ├── ConsoleTransport.ts    # Handles console output (colorized or not
 │   │   └── FileTransport.ts       # Handles file-based logging
 │   │
 │   ├── utils/
@@ -54,10 +54,9 @@ teeny-logger/
 │   │
 │   └── index.ts                   # Entry point that exports Logger and setup
 │
-├── tests(Not Avialable)/
-│   ├── src/core/Logger.test.ts             # Unit tests for the core logger
-│   ├── ConsoleTransport.test.ts   # Tests for console logging
-│   └── FileTransport.test.ts      # Tests for file logging
+├── tests/
+│   ├── core/Logger.test.ts             # Unit tests for the core logger
+│   └── transports/FileTransport.test.ts      # Tests for file logging
 │
 ├── examples/
 │   ├── basic.ts                   # Simple usage example
@@ -66,6 +65,8 @@ teeny-logger/
 ├── package.json
 ├── tsconfig.json
 ├── .eslint.json
+├── jest.config.js
+├── esbuild.config.js
 └── README.md
 ```
 

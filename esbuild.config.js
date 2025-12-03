@@ -1,4 +1,4 @@
-const { build } = require("esbuild");
+import { build } from "esbuild";
 
 // Build CommonJS version
 build({
