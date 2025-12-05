@@ -34,7 +34,7 @@ describe('Formatter - Text Formatting (Refactored)', () => {
       const output = formatter.format(logData);
       
       expect(output).toContain('[2025-01-01T12:00:00.000Z]');
-      expect(output).toContain('INFO -');
+      expect(output).toContain('[INFO]');
       expect(output).toContain('Test message');
     });
 
@@ -50,7 +50,7 @@ describe('Formatter - Text Formatting (Refactored)', () => {
       const output = formatter.format(logData);
       
       // Verify single-pass formatting with template literal
-      expect(output).toBe('[2025-01-01T12:00:00.000Z] WARN - Warning message');
+      expect(output).toBe('[2025-01-01T12:00:00.000Z] [WARN] Warning message');
     });
 
     test('should handle prefix with template literal', () => {
@@ -65,7 +65,7 @@ describe('Formatter - Text Formatting (Refactored)', () => {
       const output = formatter.format(logData);
       
       expect(output).toContain('[APP]');
-      expect(output).toBe('[2025-01-01T12:00:00.000Z] INFO - [APP] Test message');
+      expect(output).toBe('[2025-01-01T12:00:00.000Z] [APP] [INFO] Test message');
     });
 
     test('should handle metadata with template literal', () => {
@@ -95,7 +95,7 @@ describe('Formatter - Text Formatting (Refactored)', () => {
       const output = formatter.format(logData);
       
       expect(output).toBe(
-        '[2025-01-01T12:00:00.000Z] DEBUG - [DEBUG-MODULE] Debug info {"trace":"stack-trace-info"}'
+        '[2025-01-01T12:00:00.000Z] [DEBUG-MODULE] [DEBUG] Debug info {"trace":"stack-trace-info"}'
       );
     });
 
@@ -110,7 +110,7 @@ describe('Formatter - Text Formatting (Refactored)', () => {
 
       const output = formatter.format(logData);
       
-      expect(output).toBe('[2025-01-01T12:00:00.000Z] INFO - ');
+      expect(output).toBe('[2025-01-01T12:00:00.000Z] [INFO] ');
     });
 
     test('should format without timestamp using template literal', () => {
@@ -131,7 +131,7 @@ describe('Formatter - Text Formatting (Refactored)', () => {
       const output = formatter.format(logData);
       
       expect(output).not.toContain('[2025');
-      expect(output).toBe('INFO - No timestamp');
+      expect(output).toBe('[INFO] No timestamp');
     });
   });
 
@@ -279,7 +279,7 @@ describe('Formatter - Text Formatting (Refactored)', () => {
       const output = formatter.format(logData);
       
       // Empty prefix should not add extra space
-      expect(output).toBe('[2025-01-01T12:00:00.000Z] INFO - Message');
+      expect(output).toBe('[2025-01-01T12:00:00.000Z] [INFO] Message');
     });
 
     test('should format consistently regardless of input order', () => {
@@ -415,7 +415,7 @@ describe('Formatter - Text Formatting (Refactored)', () => {
 
         const output = fmt.format(logData);
         
-        expect(output).toContain('INFO -');
+        expect(output).toContain('[INFO]');
         expect(output).toContain('Test');
       });
     });

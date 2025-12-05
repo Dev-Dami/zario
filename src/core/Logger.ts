@@ -309,4 +309,9 @@ export class Logger {
   createChild(options: LoggerOptions = {}): Logger {
     return new Logger({ ...options, parent: this });
   }
+
+  startTimer(name: string): any {
+    const { Timer } = require("../utils/Timerutil");
+    return new Timer(name, (message: string) => this.info(message));
+  }
 }
