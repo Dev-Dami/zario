@@ -32,6 +32,14 @@ export class Logger {
   private asyncMode: boolean;
   private customLevels: { [level: string]: number };
   private static _global: Logger;
+  private static readonly LEVEL_PRIORITIES: { [level: string]: number } = {
+    "silent": 0,
+    "boring": 1,
+    "debug": 2,
+    "info": 3,
+    "warn": 4,
+    "error": 5,
+  };
 
   prefix: string;
   timestamp: boolean;
@@ -39,8 +47,8 @@ export class Logger {
   constructor(options: LoggerOptions = {}) {
     const {
       level,
-      colorize = true,
-      json = false,
+      colorize,
+      json,
       transports = [],
       timestampFormat = "YYYY-MM-DD HH:mm:ss",
       prefix,
@@ -63,8 +71,11 @@ export class Logger {
       this.timestamp = timestamp ?? this.parent.timestamp;
       this.asyncMode = asyncMode ?? this.parent.asyncMode;
       this.transports =
-        transports.length > 0
-          ? this.initTransports(transports, colorize)
+        transports && transports.length > 0
+          ? this.initTransports(
+              transports,
+              this.getDefaultColorizeValue(colorize),
+            )
           : this.parent.transports;
       // Merge colors; child overrides parent
       const mergedCColors = {
@@ -72,7 +83,9 @@ export class Logger {
         ...customColors,
       };
       this.formatter = new Formatter({
-        colorize: colorize ?? this.parent.formatter.isColorized(),
+        colorize:
+          this.getDefaultColorizeValue(colorize) ??
+          this.parent.formatter.isColorized(),
         json: json ?? this.parent.formatter.isJson(),
         timestampFormat:
           timestampFormat ?? this.parent.formatter.getTimestampFormat(),
@@ -83,19 +96,30 @@ export class Logger {
       // Merge custom levels with parent's custom levels
       this.customLevels = { ...this.parent.customLevels, ...customLevels };
     } else {
-      this.level = level ?? "info";
+      // Auto-configure based on environment
+      const isProd = this.isProductionEnvironment();
+
+      this.level = level ?? this.getDefaultLevel(isProd);
       this.prefix = prefix ?? "";
-      this.timestamp = timestamp ?? false;
-      this.asyncMode = asyncMode ?? false;
+      this.timestamp = timestamp ?? this.getDefaultTimestamp(isProd);
+
+      const defaultTransports =
+        transports && transports.length > 0
+          ? transports
+          : this.getDefaultTransports(isProd);
+
+      this.asyncMode = asyncMode ?? this.getDefaultAsyncMode(isProd);
+
       this.transports = this.initTransports(
-        transports.length > 0 ? transports : [{ type: "console" }],
-        colorize,
+        defaultTransports,
+        this.getDefaultColorizeValue(colorize),
       );
+
       this.formatter = new Formatter({
-        colorize,
-        json,
+        colorize: this.getDefaultColorizeValue(colorize),
+        json: json ?? this.getDefaultJson(isProd),
         timestampFormat,
-        timestamp: this.timestamp,
+        timestamp: this.getDefaultTimestamp(isProd),
         customColors,
       });
     }
@@ -103,6 +127,46 @@ export class Logger {
     if (!Logger._global) {
       Logger._global = this;
     }
+  }
+
+  private isProductionEnvironment(): boolean {
+    const env = process.env.NODE_ENV?.toLowerCase();
+    return env === "production" || env === "prod";
+  }
+
+  private getDefaultLevel(isProd: boolean): LogLevel {
+    return isProd ? "warn" : "debug";
+  }
+
+  private getDefaultColorizeValue(colorize: boolean | undefined): boolean {
+    if (colorize !== undefined) {
+      return colorize;
+    }
+    const isProd = this.isProductionEnvironment();
+    return !isProd;
+  }
+
+  private getDefaultJson(isProd: boolean): boolean {
+    return isProd;
+  }
+
+  private getDefaultTimestamp(isProd: boolean): boolean {
+    return true;
+  }
+
+  private getDefaultTransports(isProd: boolean): TransportOptions[] {
+    if (isProd) {
+      return [
+        { type: "console" },
+        { type: "file", options: { path: "./logs/app.log" } },
+      ];
+    } else {
+      return [{ type: "console" }];
+    }
+  }
+
+  private getDefaultAsyncMode(isProd: boolean): boolean {
+    return isProd;
   }
 
   private initTransports(
@@ -149,24 +213,16 @@ export class Logger {
   }
 
   private getLevelPriority(level: LogLevel): number {
-    // Default log level priorities
-    const defaultPriorities: { [key: string]: number } = {
-      silent: 0,
-      boring: 1,
-      debug: 2,
-      info: 3,
-      warn: 4,
-      error: 5,
-    };
-
+    // use a static map to avoid repeated allocations
+    if (Logger.LEVEL_PRIORITIES.hasOwnProperty(level)) {
+      return Logger.LEVEL_PRIORITIES[level]!;
+    }
     // Check if it's a custom level
-    if (this.customLevels && this.customLevels.hasOwnProperty(level)) {
+    if (this.customLevels && level in this.customLevels) {
       const customPriority = this.customLevels[level];
       return customPriority !== undefined ? customPriority : 999;
     }
-
-    // Use default priority if available
-    return defaultPriorities[level] ?? 999;
+    return 999;
   }
 
   private log(
@@ -188,14 +244,25 @@ export class Logger {
     } else {
       // Only create timestamp after confirming log should be written
       const timestamp = new Date();
-      const mergedMetadata = { ...this.context, ...metadata };
 
+      // optimize metadata merging
+      let finalMetadata: Record<string, any> | undefined;
+      if (this.context && Object.keys(this.context).length > 0) {
+        if (metadata) {
+          finalMetadata = { ...this.context, ...metadata };
+        } else {
+          finalMetadata = this.context;
+        }
+      } else if (metadata) {
+        finalMetadata = metadata;
+      }
+
+      // Only add metadata if it's not empty after merging
       const logData: LogData = {
         level,
         message,
         timestamp,
-        metadata:
-          Object.keys(mergedMetadata).length > 0 ? mergedMetadata : undefined,
+        metadata: finalMetadata && Object.keys(finalMetadata).length > 0 ? finalMetadata : undefined,
         prefix: this.prefix,
       };
 
@@ -220,14 +287,25 @@ export class Logger {
 
     // Timestamp only on confirmed log
     const timestamp = new Date();
-    const mergedMetadata = { ...this.context, ...metadata };
 
+    // optimize metadata merging
+    let finalMetadata: Record<string, any> | undefined;
+    if (this.context && Object.keys(this.context).length > 0) {
+      if (metadata) {
+        finalMetadata = { ...this.context, ...metadata };
+      } else {
+        finalMetadata = this.context;
+      }
+    } else if (metadata) {
+      finalMetadata = metadata;
+    }
+
+    // Only add metadata if it's not empty after merging
     const logData: LogData = {
       level,
       message,
       timestamp,
-      metadata:
-        Object.keys(mergedMetadata).length > 0 ? mergedMetadata : undefined,
+      metadata: finalMetadata && Object.keys(finalMetadata).length > 0 ? finalMetadata : undefined,
       prefix: this.prefix,
     };
 
