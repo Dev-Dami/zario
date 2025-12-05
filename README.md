@@ -63,7 +63,7 @@ bun add dd-tinylog
 ### 🚀 Quick Start
 
 ```js
-import Logger from "dd-tinylog";
+import { Logger } from "dd-tinylog";
 
 const logger = new Logger({
   level: "info",
@@ -146,7 +146,7 @@ Perfect when you want separate logs per module or request:
 
 ```js
 const main = new Logger({ prefix: "[APP]" });
-const db = main.child({ prefix: "[DB]" });
+const db = main.createChild({ prefix: "[DB]" });
 
 main.info("App initialized");
 db.error("Connection timeout");
@@ -437,7 +437,7 @@ const app = express();
 const logger = new Logger({ prefix: '[API]' });
 
 app.use((req, res, next) => {
-  const reqLogger = logger.child({ prefix: `[${req.method} ${req.url}]` });
+  const reqLogger = logger.createChild({ prefix: `[${req.method} ${req.url}]` });
   reqLogger.info("Incoming request");
   next();
 });
@@ -575,7 +575,7 @@ orderService.info('Order placed');
 ```
 ### JSON Format
 ```js
-const logger = new Logger({ format: "json" });
+const logger = new Logger({ json: true });
 ```
 Output:
 ```json
@@ -632,13 +632,13 @@ describe("Logger", () => {
 | Option         | Type     | Description             |
 | -------------- | -------- | ----------------------- |
 | **level**      | `string`   | Log level threshold     |
-| **format**     | `"plain" \| "json"`                 | Output format |
+| **json**       | `boolean`  | Output in JSON format   |
 | **timestamp**  | `boolean`  | Include timestamps      |
 | **prefix**     | `string`   | Prepended label         |
 | **transports** | `array`    | Where logs are written  |
 | **customLevels** | `object` | Define custom log levels and their priorities |
 | **customColors** | `object` | Assign colors to custom log levels |
-| **child()**    | `method`   | Creates a scoped logger |
+| **createChild()**    | `method`   | Creates a scoped logger |
 
 <br/>
 
