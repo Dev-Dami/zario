@@ -39,8 +39,8 @@ export class Logger {
   constructor(options: LoggerOptions = {}) {
     const {
       level,
-      colorize = true,
-      json = false,
+      colorize,
+      json,
       transports = [],
       timestampFormat = "YYYY-MM-DD HH:mm:ss",
       prefix,
@@ -63,8 +63,8 @@ export class Logger {
       this.timestamp = timestamp ?? this.parent.timestamp;
       this.asyncMode = asyncMode ?? this.parent.asyncMode;
       this.transports =
-        transports.length > 0
-          ? this.initTransports(transports, colorize)
+        transports && transports.length > 0
+          ? this.initTransports(transports, this.getDefaultColorizeValue(colorize))
           : this.parent.transports;
       // Merge colors; child overrides parent
       const mergedCColors = {
@@ -72,7 +72,7 @@ export class Logger {
         ...customColors,
       };
       this.formatter = new Formatter({
-        colorize: colorize ?? this.parent.formatter.isColorized(),
+        colorize: this.getDefaultColorizeValue(colorize) ?? this.parent.formatter.isColorized(),
         json: json ?? this.parent.formatter.isJson(),
         timestampFormat:
           timestampFormat ?? this.parent.formatter.getTimestampFormat(),
@@ -83,19 +83,29 @@ export class Logger {
       // Merge custom levels with parent's custom levels
       this.customLevels = { ...this.parent.customLevels, ...customLevels };
     } else {
-      this.level = level ?? "info";
+      // Auto-configure based on environment
+      const isProd = this.isProductionEnvironment();
+
+      this.level = level ?? this.getDefaultLevel(isProd);
       this.prefix = prefix ?? "";
-      this.timestamp = timestamp ?? false;
-      this.asyncMode = asyncMode ?? false;
+      this.timestamp = timestamp ?? this.getDefaultTimestamp(isProd);
+
+      const defaultTransports = transports && transports.length > 0
+        ? transports
+        : this.getDefaultTransports(isProd);
+
+      this.asyncMode = asyncMode ?? this.getDefaultAsyncMode(isProd);
+
       this.transports = this.initTransports(
-        transports.length > 0 ? transports : [{ type: "console" }],
-        colorize,
+        defaultTransports,
+        this.getDefaultColorizeValue(colorize)
       );
+
       this.formatter = new Formatter({
-        colorize,
-        json,
+        colorize: this.getDefaultColorizeValue(colorize),
+        json: json ?? this.getDefaultJson(isProd),
         timestampFormat,
-        timestamp: this.timestamp,
+        timestamp: this.getDefaultTimestamp(isProd),
         customColors,
       });
     }
@@ -103,6 +113,46 @@ export class Logger {
     if (!Logger._global) {
       Logger._global = this;
     }
+  }
+
+  private isProductionEnvironment(): boolean {
+    const env = process.env.NODE_ENV?.toLowerCase();
+    return env === 'production' || env === 'prod';
+  }
+
+  private getDefaultLevel(isProd: boolean): LogLevel {
+    return isProd ? 'warn' : 'debug';
+  }
+
+  private getDefaultColorizeValue(colorize: boolean | undefined): boolean {
+    if (colorize !== undefined) {
+      return colorize;
+    }
+    const isProd = this.isProductionEnvironment();
+    return !isProd;
+  }
+
+  private getDefaultJson(isProd: boolean): boolean {
+    return isProd;
+  }
+
+  private getDefaultTimestamp(isProd: boolean): boolean {
+    return true;
+  }
+
+  private getDefaultTransports(isProd: boolean): TransportOptions[] {
+    if (isProd) {
+      return [
+        { type: 'console' },
+        { type: 'file', options: { path: './logs/app.log' } }
+      ];
+    } else {
+      return [{ type: 'console' }];
+    }
+  }
+
+  private getDefaultAsyncMode(isProd: boolean): boolean {
+    return isProd;
   }
 
   private initTransports(
