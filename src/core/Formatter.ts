@@ -68,6 +68,10 @@ export class Formatter {
       parts.push(`[${timestamp}] `);
     }
 
+    if (data.prefix) {
+      parts.push(`${data.prefix} `);
+    }
+
     let level = data.level.toUpperCase();
 
     if (this.colorize) {
@@ -77,10 +81,6 @@ export class Formatter {
     }
 
     parts.push(`[${level}] `);
-
-    if (data.prefix) {
-      parts.push(`${data.prefix} `);
-    }
 
     parts.push(data.message);
 

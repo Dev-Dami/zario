@@ -261,12 +261,12 @@ export class Logger {
         finalMetadata = metadata;
       }
 
-      // Reuse the same object structure for consistency
+      // Only add metadata if it's not empty after merging
       const logData: LogData = {
         level,
         message,
         timestamp,
-        metadata: finalMetadata,
+        metadata: finalMetadata && Object.keys(finalMetadata).length > 0 ? finalMetadata : undefined,
         prefix: this.prefix,
       };
 
@@ -304,12 +304,12 @@ export class Logger {
       finalMetadata = metadata;
     }
 
-    // Reuse the same object structure for consistency
+    // Only add metadata if it's not empty after merging
     const logData: LogData = {
       level,
       message,
       timestamp,
-      metadata: finalMetadata,
+      metadata: finalMetadata && Object.keys(finalMetadata).length > 0 ? finalMetadata : undefined,
       prefix: this.prefix,
     };
 
