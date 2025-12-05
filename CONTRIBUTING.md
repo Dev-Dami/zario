@@ -4,7 +4,7 @@
 
 # 🤝 Contributing to dd-tinylog
 
-### We're thrilled you're here and excited to see you contribute!
+## We're thrilled you're here and excited to see you contribute!
 
 </div>
 
@@ -113,7 +113,7 @@ Here's a map of the `dd-tinylog` codebase to help you find your way around.
 To keep the codebase consistent and easy to read, please follow these guidelines:
 
 -   **TypeScript First**: All new code should be written in TypeScript with strong typing.
--   **Code Style**: We use ESLint and Prettier for code linting and formatting. Please run `npm run lint` and `npm run format` before committing to ensure your code matches the project's style.
+-   **Code Style**: We use ESLint for code linting. Please run `npm run lint` before committing to ensure your code matches the project's style.
 -   **Comments**: Write comments for complex logic. Well-documented code is easier for everyone to understand and maintain.
 -   **Tests**: All new features and bug fixes **must** be accompanied by tests. This ensures stability and prevents future regressions.
 

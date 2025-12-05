@@ -16,6 +16,7 @@
     "build": "node esbuild.config.js && tsc --emitDeclarationOnly --outDir dist",
     "dev": "tsc --watch",
     "test": "jest",
+    "lint": "eslint . --ext .ts,.js",
     "prepublishOnly": "npm run build"
   },
   "repository": {
