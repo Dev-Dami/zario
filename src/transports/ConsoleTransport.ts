@@ -15,19 +15,18 @@ export class ConsoleTransport implements Transport {
   }
 
   write(data: LogData, formatter: Formatter): void {
-    const originalJsonSetting = formatter["json"];
+    // Toggle colorize temporarily, then restore it
     const originalColorizeSetting = formatter["colorize"];
 
-    if (typeof this.colorize === "boolean") {
-      Object.assign(formatter, { colorize: this.colorize });
+    if (this.colorize !== originalColorizeSetting) {
+      formatter["colorize"] = this.colorize;
     }
 
     const output = formatter.format(data);
-
-    Object.assign(formatter, {
-      json: originalJsonSetting,
-      colorize: originalColorizeSetting,
-    });
+    // Restore
+    if (this.colorize !== originalColorizeSetting) {
+      formatter["colorize"] = originalColorizeSetting;
+    }
 
     switch (data.level) {
       case "error":

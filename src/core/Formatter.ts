@@ -45,7 +45,7 @@ export class Formatter {
     const formattedData: any = {
       level: data.level,
       message: data.message,
-      ...data.metadata,  // Spread user metadata to top level
+      ...data.metadata, // Spread user metadata to top level
     };
 
     if (this.timestamp) {
@@ -60,10 +60,12 @@ export class Formatter {
   }
 
   private formatAsText(data: LogData): string {
-    let timestampStr = '';
+    // preallocate parts to reduce concat cost
+    const parts: string[] = [];
+
     if (this.timestamp) {
       const timestamp = TimeUtil.format(data.timestamp, this.timestampFormat);
-      timestampStr = `[${timestamp}] `;
+      parts.push(`[${timestamp}] `);
     }
 
     let level = data.level.toUpperCase();
@@ -74,12 +76,19 @@ export class Formatter {
       level = ColorUtil.colorize(level, color);
     }
 
-    const levelStr = `[${level}] `;
-    const prefixStr = data.prefix ? `${data.prefix} ` : '';
-    const metadataStr = data.metadata ? ` ${JSON.stringify(data.metadata)}` : '';
+    parts.push(`[${level}] `);
 
-    // Use single template literal to avoid multiple concatenations
-    return `${timestampStr}${prefixStr}${levelStr}${data.message}${metadataStr}`;
+    if (data.prefix) {
+      parts.push(`${data.prefix} `);
+    }
+
+    parts.push(data.message);
+
+    if (data.metadata) {
+      parts.push(` ${JSON.stringify(data.metadata)}`);
+    }
+
+    return parts.join("");
   }
 
   setJson(json: boolean): void {
