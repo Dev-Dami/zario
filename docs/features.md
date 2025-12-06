@@ -1,6 +1,6 @@
-# Features of dd-tinylog
+# Features of zario
 
-`dd-tinylog` is a minimal, fast, and feature-rich logging library for Node.js. It offers a strong set of features to meet various logging needs efficiently.
+`zario` is a minimal, fast, and feature-rich logging library for Node.js. It offers a strong set of features to meet various logging needs efficiently.
 
 ## Core Features
 

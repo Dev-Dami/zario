@@ -20,8 +20,8 @@ export interface LoggerOptions {
   context?: Record<string, any>;
   parent?: Logger;
   asyncMode?: boolean;
-  customLevels?: { [level: string]: number }; // level name and priority
-  customColors?: { [level: string]: string }; // level name and color
+  customLevels?: { [level: string]: number }; // level name & priority
+  customColors?: { [level: string]: string }; // level name & color
 }
 
 export class Logger {
@@ -63,7 +63,7 @@ export class Logger {
 
     this.parent = parent; // Set parent
     this.context = { ...context }; // Init context
-    this.customLevels = customLevels; // Store custom log levels
+    this.customLevels = customLevels; // custom log store
     this.asyncMode = false;
 
     if (this.parent) {
@@ -74,9 +74,9 @@ export class Logger {
       this.transports =
         transports && transports.length > 0
           ? this.initTransports(
-              transports,
-              this.getDefaultColorizeValue(colorize),
-            )
+            transports,
+            this.getDefaultColorizeValue(colorize),
+          )
           : this.parent.transports;
       // Merge colors; child overrides parent
       const mergedCColors = {

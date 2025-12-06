@@ -1,13 +1,13 @@
 # Usage Guide
 
-This guide provides instructions on how to install and use `dd-tinylog` in your Node.js applications.
+This guide provides instructions on how to install and use `zario` in your Node.js applications.
 
 ## Installation
 
-To get started, install `dd-tinylog` using npm:
+To get started, install `zario` using npm:
 
 ```bash
-npm install dd-tinylog
+npm install zario
 ```
 
 ## Basic Usage

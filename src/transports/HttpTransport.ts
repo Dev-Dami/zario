@@ -6,11 +6,11 @@ import * as https from "https";
 import * as url from "url";
 
 export interface HttpTransportOptions {
-  url: string;                    // Required: remote endpoint URL
-  method?: string;                // Optional: defaults to 'POST'
-  headers?: Record<string, string>; // Optional: custom headers
-  timeout?: number;               // Optional: request timeout in milliseconds, defaults to 5000
-  retries?: number;               // Optional: number of retry attempts, defaults to 3
+  url: string;
+  method?: string;
+  headers?: Record<string, string>;
+  timeout?: number;
+  retries?: number;
 }
 
 export class HttpTransport implements Transport {
@@ -26,7 +26,7 @@ export class HttpTransport implements Transport {
       method = 'POST',
       headers = {},
       timeout = 5000,
-      retries = 3
+      retries = 3 // defaults
     } = options;
 
     if (!url) {
@@ -47,32 +47,27 @@ export class HttpTransport implements Transport {
 
   write(data: LogData, formatter: Formatter): void {
     // Format the data as JSON for HTTP transport
-    const formattedData = formatter.format(data);
-    const logObject = this.parseFormattedData(formattedData, data);
+    const logObject = this.parseFormattedData(data);
     const body = JSON.stringify(logObject);
 
-    // For synchronous operation, initiate the HTTP request without waiting
-    // In Node.js, HTTP requests are inherently async, so we make it fire-and-forget
     setImmediate(() => {
-      this.sendHttpRequestWithRetry(body, 0) // No retries in sync mode
+      this.sendHttpRequestWithRetry(body, 0)
         .catch((error) => {
-          // In sync mode, we just log errors to console instead of throwing
           console.error('HttpTransport error (sync mode):', error.message);
         });
     });
   }
 
   async writeAsync(data: LogData, formatter: Formatter): Promise<void> {
-    // Format the data as JSON for HTTP transport
-    const formattedData = formatter.format(data);
-    const logObject = this.parseFormattedData(formattedData, data);
+    // json formating for HttpTransport
+    const logObject = this.parseFormattedData(data);
     const body = JSON.stringify(logObject);
 
     await this.sendHttpRequestWithRetry(body, this.retries);
   }
 
-  private parseFormattedData(formattedData: string, originalData: LogData): any {
-    // Create a structured log object regardless of formatter output
+  private parseFormattedData(originalData: LogData): any {
+    // structured log overide original params
     return {
       level: originalData.level,
       message: originalData.message,
@@ -88,16 +83,16 @@ export class HttpTransport implements Transport {
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
       try {
         await this.sendHttpRequest(body);
-        return; // Success, exit the loop
+        return; // success then exit
       } catch (error) {
         lastError = error as Error;
 
-        // If this was the last attempt, stop retrying
+        // stop if last attempt
         if (attempt === maxRetries) {
           break;
         }
 
-        // Wait before retrying (exponential backoff)
+        // timer wait before continue
         await this.delay(Math.pow(2, attempt) * 1000);
       }
     }
@@ -112,7 +107,7 @@ export class HttpTransport implements Transport {
       const parsedUrl = new url.URL(this.url);
       const isHttps = parsedUrl.protocol === 'https:';
       const client = isHttps ? https : http;
-      
+
       const requestOptions: http.RequestOptions = {
         hostname: parsedUrl.hostname,
         port: parsedUrl.port,
@@ -127,11 +122,11 @@ export class HttpTransport implements Transport {
 
       const req = client.request(requestOptions, (res) => {
         let responseData = '';
-        
+
         res.on('data', (chunk) => {
           responseData += chunk;
         });
-        
+
         res.on('end', () => {
           if (res.statusCode && res.statusCode >= 200 && res.statusCode < 300) {
             resolve();

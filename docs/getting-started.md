@@ -1,13 +1,13 @@
-# dd-tinylog
+# zario
 
-This guide will help you understand how to use `dd-tinylog` in your Node.js application.
+This guide will help you understand how to use `zario` in your Node.js application.
 
 ## Installation
 
 First, install the library using npm:
 
 ```bash
-npm install dd-tinylog
+npm install zario
 ```
 
 ## Basic Usage
@@ -15,7 +15,7 @@ npm install dd-tinylog
 To start logging, create an instance of the `Logger` class.
 
 ```typescript
-import { Logger } from 'dd-tinylog';
+import { Logger } from 'zario';
 
 // Create a logger with default options
 const logger = new Logger();
@@ -28,14 +28,14 @@ logger.silent('This message will not be logged');
 logger.boring('This message will be logged but not colored');
 ```
 
-By default, `dd-tinylog` logs messages with a level of `info` or higher to the console.
+By default, `zario` logs messages with a level of `info` or higher to the console.
 
 ## Configuration
 
 You can customize the logger by passing a configuration object to the constructor.
 
 ```typescript
-import { Logger } from 'dd-tinylog';
+import { Logger } from 'zario';
 
 const logger = new Logger({
   level: 'debug', // Log all messages from debug level and above
