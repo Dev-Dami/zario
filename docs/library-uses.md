@@ -1,6 +1,6 @@
-# Uses for dd-tinylog
+# Uses for zario
 
-`dd-tinylog` is a flexible logging tool for a variety of Node.js applications. Its minimal overhead and rich features make it suitable for different environments and needs.
+`zario` is a flexible logging tool for a variety of Node.js applications. Its minimal overhead and rich features make it suitable for different environments and needs.
 
 ## Common Use Cases
 

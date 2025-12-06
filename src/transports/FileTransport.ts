@@ -103,20 +103,20 @@ export class FileTransport implements Transport {
 
   private async rotateFilesAsync(): Promise<void> {
     try {
-      // Read current file content asynchronously
+      // read current file content asynchronously
       let currentContent = "";
       if (fs.existsSync(this.filePath)) {
         currentContent = await fs.promises.readFile(this.filePath, "utf8");
       }
 
-      // Create rotated file with current content
+      // create rotated file with current content
       const rotatedFilePath = this.getRotatedFilePath();
       await fs.promises.writeFile(rotatedFilePath, currentContent, "utf8");
 
-      // Create new empty current file
+      // create new empty current file
       await fs.promises.writeFile(this.filePath, "", "utf8");
 
-      // Cleanup old files
+      // cleanup old files
       await this.cleanupOldFilesAsync();
     } catch (error) {
       console.error("Error during async file rotation:", error);
@@ -139,10 +139,10 @@ export class FileTransport implements Transport {
       try {
         fs.accessSync(dir, fs.constants.F_OK);
       } catch {
-        return; // Directory doesn't exist, nothing to clean up
+        return; // if dir does not exist there nothing to clean up
       }
 
-      // Get all files in directory
+      // fetch all files in directory
       const allFiles = fs.readdirSync(dir);
 
       // Filter for rotated files: basename.timestamp
@@ -269,7 +269,6 @@ export class FileTransport implements Transport {
               .access(fileToDelete, fs.constants.F_OK)
               .then(() => fs.promises.unlink(fileToDelete))
               .catch((error) => {
-                // Only log if it's not a "file not found" error
                 if (error.code !== "ENOENT") {
                   console.error(
                     `Failed to delete old log file ${fileToDelete}:`,
