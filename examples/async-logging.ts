@@ -1,4 +1,4 @@
-import { Logger, consoleT, fileT } from "../src";
+import { Logger, ConsoleTransport, FileTransport } from "../src";
 
 // Create a logger with asynchronous logging
 const asyncLogger = new Logger({
@@ -6,8 +6,8 @@ const asyncLogger = new Logger({
   colorize: true,
   asyncMode: true, // Enable asynchronous logging
   transports: [
-    consoleT(),
-    fileT({ path: "./logs/async-app.log" }),
+    new ConsoleTransport(),
+    new FileTransport({ path: "./logs/async-app.log" }),
   ],
   prefix: "[Async-App]",
   timestamp: true,

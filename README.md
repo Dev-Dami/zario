@@ -63,12 +63,12 @@ bun add zario
 ### 🚀 Quick Start
 
 ```js
-import { Logger, consoleT, fileT } from "zario";
+import { Logger, ConsoleTransport } from "zario";
 
 const logger = new Logger({
   level: "info",
   colorize: true,
-  transports: [consoleT()],
+  transports: [new ConsoleTransport()],
   prefix: "[MyApp]",
 });
 // Start logging
@@ -193,8 +193,8 @@ const prodLogger = new Logger();
 ```
 
 Auto-configuration behavior:
-- **Development**: `level: 'debug'`, `colorize: true`, `json: false`, `asyncMode: false`, `transports: [consoleT()]`
-- **Production**: `level: 'warn'`, `colorize: false`, `json: true`, `asyncMode: true`, `transports: [consoleT(), fileT({path: './logs/app.log'})]`
+- **Development**: `level: 'debug'`, `colorize: true`, `json: false`, `asyncMode: false`, `transports: [new ConsoleTransport()]`
+- **Production**: `level: 'warn'`, `colorize: false`, `json: true`, `asyncMode: true`, `transports: [new ConsoleTransport(), new FileTransport({path: './logs/app.log'})]`
 
 All settings can be overridden with explicit options.
 
@@ -381,7 +381,7 @@ const logger = new Logger({
     'critical': 'brightRed',
   },
   transports: [
-    consoleT()
+    new ConsoleTransport()
   ]
 });
 
@@ -408,7 +408,7 @@ const highLevelLogger = new Logger({
     'critical': 7,
   },
   transports: [
-    consoleT()
+    new ConsoleTransport()
   ]
 });
 
@@ -435,7 +435,7 @@ const parentLogger = new Logger({
     'parent_custom': 'blue',
   },
   transports: [
-    consoleT()
+    new ConsoleTransport()
   ]
 });
 
@@ -506,7 +506,7 @@ import Logger from 'zario';
 
 const logger = new Logger({
   level: 'info',
-  transports: [consoleT()]
+  transports: [new ConsoleTransport()]
 });
 
 export async function handler(event) {
@@ -645,7 +645,7 @@ import Logger from "zario";
 
 export const logger = new Logger({
   prefix: "[API]",
-  transports: [consoleT()],
+  transports: [new ConsoleTransport()],
 });
 ```
 

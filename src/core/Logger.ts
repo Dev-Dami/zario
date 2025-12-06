@@ -202,21 +202,8 @@ export class Logger {
           }
         }
       }
-      // Check if it's a function
-      else if (typeof transportConfig === "function") {
-        const transportInstance = (transportConfig as Function)();
-        if (
-          transportInstance instanceof ConsoleTransport ||
-          transportInstance instanceof FileTransport
-        ) {
-          initializedTransports.push(transportInstance);
-        }
-      } else if (
-        transportConfig &&
-        typeof transportConfig === "object" &&
-        (transportConfig instanceof ConsoleTransport ||
-          transportConfig instanceof FileTransport)
-      ) {
+      // Validate transport objects that implement the Transport interface
+      else if (this.isTransport(transportConfig)) {
         initializedTransports.push(transportConfig as Transport);
       }
     }
@@ -227,6 +214,10 @@ export class Logger {
     config: TransportConfig,
   ): config is LegacyTransportOptions {
     return typeof config === "object" && config !== null && "type" in config;
+  }
+
+  private isTransport(obj: any): obj is Transport {
+    return obj && typeof obj.write === "function";
   }
 
   private shouldLog(level: LogLevel): boolean {
