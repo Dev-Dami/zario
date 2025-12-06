@@ -11,12 +11,12 @@ npm install zario
 ## Quick Start
 
 ```js
-import { Logger, consoleT, fileT } from "zario";
+import { Logger, ConsoleTransport } from "zario";
 
 const logger = new Logger({
   level: "info",
   colorize: true,
-  transports: [consoleT()],
+  transports: [new ConsoleTransport()],
   prefix: "[MyApp]",
 });
 
@@ -55,21 +55,45 @@ logger.error("❌ Database connection failed", { code: 500 });
 
 #### Console Transport
 ```js
+import { Logger, ConsoleTransport } from "zario";
+
 const logger = new Logger({
   transports: [
-    console({ colorize: true })
+    new ConsoleTransport({ colorize: true })
   ]
 });
 ```
 
 #### File Transport
 ```js
+import { Logger, FileTransport } from "zario";
+
 const logger = new Logger({
   transports: [
-    file({
+    new FileTransport({
       path: './logs/app.log',
       maxSize: 10485760, // 10MB in bytes
       maxFiles: 5
+    })
+  ]
+});
+```
+
+#### HTTP Transport
+```js
+import { Logger, HttpTransport } from "zario";
+
+const logger = new Logger({
+  transports: [
+    new HttpTransport({
+      url: 'https://api.example.com/logs',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer your-token-here'
+      },
+      timeout: 10000,  // Request timeout in ms
+      retries: 3       // Number of retry attempts
     })
   ]
 });
@@ -89,12 +113,12 @@ const logger = new Logger({
 
 ### Basic Usage
 ```js
-import { Logger } from "zario";
+import { Logger, ConsoleTransport } from "zario";
 
 const logger = new Logger({
   level: "info",
   colorize: true,
-  transports: [consoleT()]
+  transports: [new ConsoleTransport()]
 });
 
 logger.info("Application started");
@@ -108,7 +132,7 @@ const logger = new Logger({ json: true });
 
 ### Custom Levels & Colors
 ```js
-import { Logger } from "zario";
+import { Logger, ConsoleTransport } from "zario";
 
 const logger = new Logger({
   level: 'info',
@@ -123,7 +147,7 @@ const logger = new Logger({
     'critical': 'brightRed',
   },
   transports: [
-    consoleT()
+    new ConsoleTransport()
   ]
 });
 
@@ -144,11 +168,13 @@ db.error("Connection timeout");
 
 ### Multiple Transports
 ```js
+import { Logger, ConsoleTransport, FileTransport } from "zario";
+
 const logger = new Logger({
   level: 'info',
   transports: [
-    consoleT(),
-    fileT({ path: './logs/app.log' })
+    new ConsoleTransport(),
+    new FileTransport({ path: './logs/app.log' })
   ]
 });
 ```
