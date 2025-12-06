@@ -1,13 +1,10 @@
-import { Logger } from "../src";
+import { Logger, consoleT, fileT } from "../src";
 
 // create a logger instance for JSON structured logs
 const jsonLogger = new Logger({
   level: "debug",
   json: true,
-  transports: [
-    { type: "console" },
-    { type: "file", options: { path: "./logs/json-logs.json" } },
-  ],
+  transports: [consoleT(), fileT({ path: "./logs/json-logs.json" })],
 });
 
 // Log can structure data as JSON

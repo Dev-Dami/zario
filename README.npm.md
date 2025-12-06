@@ -11,12 +11,12 @@ npm install zario
 ## Quick Start
 
 ```js
-import { Logger } from "zario";
+import { Logger, consoleT, fileT } from "zario";
 
 const logger = new Logger({
   level: "info",
   colorize: true,
-  transports: [{ type: "console" }],
+  transports: [consoleT()],
   prefix: "[MyApp]",
 });
 
@@ -56,26 +56,22 @@ logger.error("❌ Database connection failed", { code: 500 });
 #### Console Transport
 ```js
 const logger = new Logger({
-  transports: [{
-    type: 'console',
-    options: {
-      colorize: true
-    }
-  }]
+  transports: [
+    console({ colorize: true })
+  ]
 });
 ```
 
 #### File Transport
 ```js
 const logger = new Logger({
-  transports: [{
-    type: 'file',
-    options: {
+  transports: [
+    file({
       path: './logs/app.log',
       maxSize: 10485760, // 10MB in bytes
       maxFiles: 5
-    }
-  }]
+    })
+  ]
 });
 ```
 
@@ -98,7 +94,7 @@ import { Logger } from "zario";
 const logger = new Logger({
   level: "info",
   colorize: true,
-  transports: [{ type: "console" }]
+  transports: [consoleT()]
 });
 
 logger.info("Application started");
@@ -127,7 +123,7 @@ const logger = new Logger({
     'critical': 'brightRed',
   },
   transports: [
-    { type: 'console' }
+    consoleT()
   ]
 });
 
@@ -151,11 +147,8 @@ db.error("Connection timeout");
 const logger = new Logger({
   level: 'info',
   transports: [
-    { type: 'console' },
-    { 
-      type: 'file',
-      options: { path: './logs/app.log' }
-    }
+    consoleT(),
+    fileT({ path: './logs/app.log' })
   ]
 });
 ```

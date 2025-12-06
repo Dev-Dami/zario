@@ -1,4 +1,4 @@
-import { Logger } from "../src";
+import { Logger, consoleT, fileT } from "../src";
 
 // create a logger instance
 const logger = new Logger({
@@ -6,8 +6,8 @@ const logger = new Logger({
   colorize: true,
   json: false,
   transports: [
-    { type: "console" },
-    { type: "file", options: { path: "./logs/app.log" } },
+    consoleT(),
+    fileT({ path: "./logs/app.log" }),
   ],
   timestampFormat: "YYYY-MM-DD HH:mm:ss",
 });

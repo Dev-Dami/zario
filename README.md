@@ -63,12 +63,12 @@ bun add zario
 ### 🚀 Quick Start
 
 ```js
-import { Logger } from "zario";
+import { Logger, consoleT, fileT } from "zario";
 
 const logger = new Logger({
   level: "info",
   colorize: true,
-  transports: [{ type: "console" }],
+  transports: [consoleT()],
   prefix: "[MyApp]",
 });
 // Start logging
@@ -193,8 +193,8 @@ const prodLogger = new Logger();
 ```
 
 Auto-configuration behavior:
-- **Development**: `level: 'debug'`, `colorize: true`, `json: false`, `asyncMode: false`, `transports: [{type: 'console'}]`
-- **Production**: `level: 'warn'`, `colorize: false`, `json: true`, `asyncMode: true`, `transports: [{type: 'console'}, {type: 'file', options: {path: './logs/app.log'}}]`
+- **Development**: `level: 'debug'`, `colorize: true`, `json: false`, `asyncMode: false`, `transports: [consoleT()]`
+- **Production**: `level: 'warn'`, `colorize: false`, `json: true`, `asyncMode: true`, `transports: [consoleT(), fileT({path: './logs/app.log'})]`
 
 All settings can be overridden with explicit options.
 
@@ -253,10 +253,9 @@ All settings can be overridden with explicit options.
 
 ```javascript
 const logger = new Logger({
-  transports: [{ 
-    type: 'console',
-    colorize: true 
-  }]
+  transports: [
+    consoleT({ colorize: true })
+  ]
 });
 ```
 
@@ -269,14 +268,13 @@ Perfect for development and debugging.
 
 ```javascript
 const logger = new Logger({
-  transports: [{
-    type: 'file',
-    options: {
+  transports: [
+    file({
       path: './logs/app.log',
       maxSize: 10485760, // 10MB in bytes
       maxFiles: 5
-    }
-  }]
+    })
+  ]
 });
 ```
 
@@ -383,7 +381,7 @@ const logger = new Logger({
     'critical': 'brightRed',
   },
   transports: [
-    { type: 'console' }
+    consoleT()
   ]
 });
 
@@ -410,7 +408,7 @@ const highLevelLogger = new Logger({
     'critical': 7,
   },
   transports: [
-    { type: 'console' }
+    consoleT()
   ]
 });
 
@@ -437,7 +435,7 @@ const parentLogger = new Logger({
     'parent_custom': 'blue',
   },
   transports: [
-    { type: 'console' }
+    consoleT()
   ]
 });
 
@@ -508,7 +506,7 @@ import Logger from 'zario';
 
 const logger = new Logger({
   level: 'info',
-  transports: [{ type: 'console' }]
+  transports: [consoleT()]
 });
 
 export async function handler(event) {
@@ -647,7 +645,7 @@ import Logger from "zario";
 
 export const logger = new Logger({
   prefix: "[API]",
-  transports: [{ type: "console" }],
+  transports: [consoleT()],
 });
 ```
 

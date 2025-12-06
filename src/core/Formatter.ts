@@ -43,9 +43,9 @@ export class Formatter {
 
   private formatAsJson(data: LogData): string {
     const formattedData: any = {
+      ...data.metadata, // Spread first so core fields can override
       level: data.level,
       message: data.message,
-      ...data.metadata, // Spread user metadata to top level
     };
 
     if (this.timestamp) {

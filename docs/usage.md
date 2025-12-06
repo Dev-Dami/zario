@@ -16,9 +16,9 @@ Initialize the logger and start logging messages.
 
 ```typescript
 // ESM
-import { Logger } from 'dd-tinylog';
+import { Logger, consoleT, fileT } from 'dd-tinylog';
 // CommonJS
-const { Logger } = require("dd-tinylog");
+const { Logger, consoleT, fileT } = require("dd-tinylog");
 
 // Create a logger instance with desired configurations
 const logger = new Logger({
@@ -26,8 +26,8 @@ const logger = new Logger({
   colorize: true,        // Enable colored output for console transport
   asyncMode: true,           // Enable asynchronous logging
   transports: [
-    { type: 'console' },                               // Log to console
-    { type: 'file', options: { path: './logs/app.log' } }, // Log to a file
+    consoleT(),                               // Log to console
+    fileT({ path: './logs/app.log' }),       // Log to a file
   ],
   prefix: '[My-App]',    // Custom prefix for all log messages
   timestamp: true,       // Include timestamps in logs

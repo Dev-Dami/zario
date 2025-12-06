@@ -5,14 +5,16 @@ import {
   ConsoleTransport,
   FileTransport,
   FileTransportOptions,
+  ConsoleTransportOptions,
 } from "../transports";
-import { TransportOptions, LogData } from "../types";
+import { TransportConfig, LegacyTransportOptions, LogData } from "../types";
+import { consoleT, fileT } from "../transports";
 
 export interface LoggerOptions {
   level?: LogLevel;
   colorize?: boolean;
   json?: boolean;
-  transports?: TransportOptions[];
+  transports?: TransportConfig[];
   timestampFormat?: string;
   prefix?: string;
   timestamp?: boolean;
@@ -33,12 +35,12 @@ export class Logger {
   private customLevels: { [level: string]: number };
   private static _global: Logger;
   private static readonly LEVEL_PRIORITIES: { [level: string]: number } = {
-    "silent": 0,
-    "boring": 1,
-    "debug": 2,
-    "info": 3,
-    "warn": 4,
-    "error": 5,
+    silent: 0,
+    boring: 1,
+    debug: 2,
+    info: 3,
+    warn: 4,
+    error: 5,
   };
 
   prefix: string;
@@ -154,14 +156,11 @@ export class Logger {
     return true;
   }
 
-  private getDefaultTransports(isProd: boolean): TransportOptions[] {
+  private getDefaultTransports(isProd: boolean): TransportConfig[] {
     if (isProd) {
-      return [
-        { type: "console" },
-        { type: "file", options: { path: "./logs/app.log" } },
-      ];
+      return [consoleT(), fileT({ path: "./logs/app.log" })];
     } else {
-      return [{ type: "console" }];
+      return [consoleT()];
     }
   }
 
@@ -170,37 +169,64 @@ export class Logger {
   }
 
   private initTransports(
-    transportOptions: TransportOptions[],
+    transportConfigs: TransportConfig[],
     defaultColorize: boolean,
   ): Transport[] {
     const initializedTransports: Transport[] = [];
-    for (const transportOption of transportOptions) {
-      if (transportOption.type === "console") {
-        const consoleTransport = new ConsoleTransport({
-          colorize: transportOption.options?.colorize ?? defaultColorize,
-        });
-        initializedTransports.push(consoleTransport);
-      } else if (transportOption.type === "file") {
-        if (transportOption.options?.path) {
-          const fileOptions: FileTransportOptions = {
-            path: transportOption.options.path,
-          };
-          if (transportOption.options.maxSize !== undefined) {
-            fileOptions.maxSize = transportOption.options.maxSize;
+    for (const transportConfig of transportConfigs) {
+      // Check if it's a legacy config object
+      if (this.isLegacyTransportOptions(transportConfig)) {
+        const transportOption = transportConfig as LegacyTransportOptions;
+        if (transportOption.type === "console") {
+          const consoleTransport = new ConsoleTransport({
+            colorize: transportOption.options?.colorize ?? defaultColorize,
+          });
+          initializedTransports.push(consoleTransport);
+        } else if (transportOption.type === "file") {
+          if (transportOption.options?.path) {
+            const fileOptions: FileTransportOptions = {
+              path: transportOption.options.path,
+            };
+            if (transportOption.options.maxSize !== undefined) {
+              fileOptions.maxSize = transportOption.options.maxSize;
+            }
+            if (transportOption.options.maxFiles !== undefined) {
+              fileOptions.maxFiles = transportOption.options.maxFiles;
+            }
+            const fileTransport = new FileTransport(fileOptions);
+            initializedTransports.push(fileTransport);
           }
-          if (transportOption.options.maxFiles !== undefined) {
-            fileOptions.maxFiles = transportOption.options.maxFiles;
+        } else if (transportOption.type === "custom") {
+          if (transportOption.instance) {
+            initializedTransports.push(transportOption.instance);
           }
-          const fileTransport = new FileTransport(fileOptions);
-          initializedTransports.push(fileTransport);
         }
-      } else if (transportOption.type === "custom") {
-        if (transportOption.instance) {
-          initializedTransports.push(transportOption.instance);
+      }
+      // Check if it's a function
+      else if (typeof transportConfig === "function") {
+        const transportInstance = (transportConfig as Function)();
+        if (
+          transportInstance instanceof ConsoleTransport ||
+          transportInstance instanceof FileTransport
+        ) {
+          initializedTransports.push(transportInstance);
         }
+      } else if (
+        transportConfig &&
+        typeof transportConfig === "object" &&
+        (transportConfig instanceof ConsoleTransport ||
+          transportConfig instanceof FileTransport)
+      ) {
+        initializedTransports.push(transportConfig as Transport);
       }
     }
     return initializedTransports;
+  }
+
+  private isLegacyTransportOptions(
+    config: TransportConfig,
+  ): config is LegacyTransportOptions {
+    return typeof config === "object" && config !== null && "type" in config;
   }
 
   private shouldLog(level: LogLevel): boolean {
@@ -262,7 +288,10 @@ export class Logger {
         level,
         message,
         timestamp,
-        metadata: finalMetadata && Object.keys(finalMetadata).length > 0 ? finalMetadata : undefined,
+        metadata:
+          finalMetadata && Object.keys(finalMetadata).length > 0
+            ? finalMetadata
+            : undefined,
         prefix: this.prefix,
       };
 
@@ -305,7 +334,10 @@ export class Logger {
       level,
       message,
       timestamp,
-      metadata: finalMetadata && Object.keys(finalMetadata).length > 0 ? finalMetadata : undefined,
+      metadata:
+        finalMetadata && Object.keys(finalMetadata).length > 0
+          ? finalMetadata
+          : undefined,
       prefix: this.prefix,
     };
 
