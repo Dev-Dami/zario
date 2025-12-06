@@ -254,7 +254,7 @@ All settings can be overridden with explicit options.
 ```javascript
 const logger = new Logger({
   transports: [
-    console({ colorize: true })
+    consoleT({ colorize: true })
   ]
 });
 ```
